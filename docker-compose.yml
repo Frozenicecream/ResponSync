@@ -17,14 +17,18 @@ services:
   backend:
     build:
       context: .
-      dockerfile: src\backend\Dockerfile
+      dockerfile: src/backend/Dockerfile
     container_name: backend
     ports:
       - "5000:5000" # Map host port 5000 to container port 5000
     volumes:
-      - ./src/backend:/app # Mount your backend code for development (optional for production)
+      - ./src/backend:/app/backend # Mount your backend code for development
+      - ./src/database:/app/database
+      - ./src/model:/app/model
+      - ./data:/data
+      - ./src/main.py:/app/main.py
     depends_on:
-      - osrm-data-processor # Changed dependency
+      - osrm-data-processor
     restart: unless-stopped
 
   frontend:
