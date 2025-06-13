@@ -9,7 +9,7 @@ COPY src/backend/ /app/backend/
 COPY src/database/ /app/database/
 COPY src/model/ /app/model/
 COPY data/ /data/
-COPY src/main.py .
+COPY src/main.py /app/
 EXPOSE 5000
 
 CMD ["sh", "-c", "python main.py && python backend/KPI.py"]

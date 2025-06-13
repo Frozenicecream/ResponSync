@@ -30,7 +30,7 @@ services:
   frontend:
     build:
       context: ./src/frontend/map
-      dockerfile: src\frontend\map\Dockerfile
+      dockerfile: Dockerfile
     container_name: frontend
     ports:
       - "3000:80"
