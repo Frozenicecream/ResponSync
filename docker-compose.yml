@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     container_name: osrm-data-processor
     ports:
-      - "5000:5000" # Changed to use port 5000 to match nginx configuration
+      - "5002:5000" # OSRM default port, mapped to 5002 on host to avoid conflict
     volumes:
       - ./osrm-data:/osrm-data
     restart: unless-stopped
@@ -22,7 +22,7 @@ services:
       dockerfile: src/backend/Dockerfile
     container_name: backend
     ports:
-      - "5001:5000" # Changed to avoid port conflict with OSRM
+      - "5000:5000" # Map host port 5000 to container port 5000
     volumes:
       - ./src/backend:/app/backend
       - ./src/database:/app/database
