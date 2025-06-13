@@ -76,7 +76,7 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
     const control = L.Routing.control({
       waypoints,
       router: L.Routing.osrmv1({
-        serviceUrl: 'http://osrm-data-processor:5000/route/v1'
+        serviceUrl: '/route/v1' // Relative path to http://osrm-data-processor:5000/route/v1 forwarded to Nginx
       }),
       routeWhileDragging: false,
       addWaypoints: false,
