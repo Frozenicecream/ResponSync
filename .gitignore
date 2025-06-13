@@ -1,0 +1,56 @@
+# Database files
+src/database/database.db
+src/backend/__pycache__/
+src\backend\__pycache__\api.cpython-311.pyc
+
+# Large data directories
+osrm-data/
+osrm-data-processor/
+data/
+
+# Frontend build files
+hackathon frontend/node_modules/
+hackathon frontend/.next/
+hackathon frontend/build/
+hackathon frontend/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

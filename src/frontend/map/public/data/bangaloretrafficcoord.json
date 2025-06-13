@@ -1,0 +1,281 @@
+[
+    {
+        "area": "Indiranagar",
+        "road": "100 Feet Road",
+        "startlat": 12.9783397,
+        "startlong": 77.6409171,
+        "endlat": 12.972019,
+        "endlong": 77.6412389,
+        "trafficvolume": 50590
+    },
+    {
+        "road": "Koramangala Road",
+        "area": "Koramangala",
+        "startlat": 12.9442005,
+        "startlong": 77.6088678,
+        "endlat": 12.9417584,
+        "endlong": 77.6161847,
+        "trafficvolume": 52000
+    },
+    {
+        "road": "Bannerghatta Road",
+        "area": "Bannerghatta",
+        "startlat": 12.8816186,
+        "startlong": 77.5959583,
+        "endlat": 12.9021347,
+        "endlong": 77.6011014,
+        "trafficvolume": 45000
+    },
+    {
+        "road": "Outer Ring Road",
+        "area": "Outer Ring Road",
+        "startlat": 12.9061971,
+        "startlong": 77.5955704,
+        "endlat": 12.9062519,
+        "endlong": 77.5947402,
+        "trafficvolume": 60000
+    },
+    {
+        "road": "Hebbal Flyover",
+        "area": "Hebbal",
+        "startlat": 13.043622,
+        "startlong": 77.590702,
+        "endlat": 13.0460225,
+        "endlong": 77.5912763,
+        "trafficvolume": 48000
+    },
+    {
+        "road": "Sarjapur Road",
+        "area": "Sarjapur",
+        "startlat": 12.9244834,
+        "startlong": 77.6504545,
+        "endlat": 12.9242769,
+        "endlong": 77.6517829,
+        "trafficvolume": 47000
+    },
+    {
+        "road": "Church Street",
+        "area": "MG Road",
+        "startlat": 12.9743316,
+        "startlong": 77.6077158,
+        "endlat": 12.9755262,
+        "endlong": 77.6027863,
+        "trafficvolume": 42000
+    },
+    {
+        "road": "Hosur Road",
+        "area": "Hosur",
+        "startlat": 12.8360095,
+        "startlong": 77.6791928,
+        "endlat": 12.8399067,
+        "endlong": 77.6769299,
+        "trafficvolume": 55000
+    },
+    {
+        "road": "Marathahalli Bridge",
+        "area": "Marathahalli",
+        "startlat": 12.9568475,
+        "startlong": 77.7042997,
+        "endlat": 12.9568475,
+        "endlong": 77.7042997,
+        "trafficvolume": 35000
+    },
+    {
+        "road": "Banaswadi Road",
+        "area": "Banaswadi",
+        "startlat": 12.9991902,
+        "startlong": 77.6245482,
+        "endlat": 13.0015774,
+        "endlong": 77.6304433,
+        "trafficvolume": 39000
+    },
+    {
+        "road": "Cunningham Road",
+        "area": "Cunningham",
+        "startlat": 12.9904658,
+        "startlong": 77.5886072,
+        "endlat": 12.9896577,
+        "endlong": 77.5928227,
+        "trafficvolume": 38000
+    },
+    {
+        "road": "Thippasandra Main Road",
+        "area": "Thippasandra",
+        "startlat": 12.9731214,
+        "startlong": 77.6469065,
+        "endlat": 12.9731216,
+        "endlong": 77.6469801,
+        "trafficvolume": 35000
+    },
+    {
+        "road": "Bangalore-Mysore Road",
+        "area": "Mysore",
+        "startlat": 12.9295613,
+        "startlong": 77.5049585,
+        "endlat": 12.9357857,
+        "endlong": 77.5136571,
+        "trafficvolume": 50000
+    },
+    {
+        "road": "Banaswadi Main Road",
+        "area": "Banaswadi",
+        "startlat": 13.0076174,
+        "startlong": 77.6408832,
+        "endlat": 13.0080895,
+        "endlong": 77.6416085,
+        "trafficvolume": 43000
+    },
+    {
+        "road": "Kanakapura Road",
+        "area": "Kanakapura",
+        "startlat": 12.9273139,
+        "startlong": 77.5769588,
+        "endlat": 12.9237666,
+        "endlong": 77.5765409,
+        "trafficvolume": 42000
+    },
+    {
+        "road": "Whitefield Main Road",
+        "area": "Whitefield",
+        "startlat": 12.9613488,
+        "startlong": 77.7476132,
+        "endlat": 12.9697383,
+        "endlong": 77.7499022,
+        "trafficvolume": 57000
+    },
+    {
+        "road": "Hennur Main Road",
+        "area": "Hennur",
+        "startlat": 13.0235932,
+        "startlong": 77.6310125,
+        "endlat": 13.027654,
+        "endlong": 77.6324868,
+        "trafficvolume": 49000
+    },
+    {
+        "road": "Anand Rao Circle",
+        "area": "Anand Rao Circle",
+        "startlat": 12.9805399,
+        "startlong": 77.5744733,
+        "endlat": 12.9805399,
+        "endlong": 77.5744733,
+        "trafficvolume": 36000
+    },
+    {
+        "road": "Yelahanka Road",
+        "area": "Yelahanka",
+        "startlat": 13.0952244,
+        "startlong": 77.5941775,
+        "endlat": 13.0953276,
+        "endlong": 77.5940675,
+        "trafficvolume": 33000
+    },
+    {
+        "road": "Kempapura Main Road",
+        "area": "Kempapura",
+        "startlat": 12.9464646,
+        "startlong": 77.6730205,
+        "endlat": 12.9443043,
+        "endlong": 77.6802656,
+        "trafficvolume": 37000
+    },
+    {
+        "road": "Sankey Road",
+        "area": "Sankey",
+        "startlat": 12.9866561,
+        "startlong": 77.5887342,
+        "endlat": 12.9889587,
+        "endlong": 77.5860522,
+        "trafficvolume": 40000
+    },
+    {
+        "road": "Commercial Street",
+        "area": "Commercial Street",
+        "startlat": 12.9815443,
+        "startlong": 77.6102726,
+        "endlat": 12.9829272,
+        "endlong": 77.6062543,
+        "trafficvolume": 34000
+    },
+    {
+        "road": "Jakkur Road",
+        "area": "Jakkur",
+        "startlat": 13.0824684,
+        "startlong": 77.6073274,
+        "endlat": 13.0920386,
+        "endlong": 77.6013163,
+        "trafficvolume": 36000
+    },
+    {
+        "road": "Magadi Road",
+        "area": "Magadi",
+        "startlat": 12.9902319,
+        "startlong": 77.504586,
+        "endlat": 12.9882899,
+        "endlong": 77.5115766,
+        "trafficvolume": 41000
+    },
+    {
+        "road": "Bellary Road",
+        "area": "Bellary",
+        "startlat": 13.0388465,
+        "startlong": 77.5892309,
+        "endlat": 13.0396122,
+        "endlong": 77.5893653,
+        "trafficvolume": 46000
+    },
+    {
+        "road": "Koramangala 4th Block",
+        "area": "Koramangala",
+        "startlat": 12.929844,
+        "startlong": 77.63287,
+        "endlat": 12.929844,
+        "endlong": 77.63287,
+        "trafficvolume": 34000
+    },
+    {
+        "road": "Kengeri Main Road",
+        "area": "Kengeri",
+        "startlat": 12.9874298,
+        "startlong": 77.5122353,
+        "endlat": 12.9797254,
+        "endlong": 77.5107931,
+        "trafficvolume": 43000
+    },
+    {
+        "road": "Kasturba Road",
+        "area": "Kasturba",
+        "startlat": 12.9678226,
+        "startlong": 77.5876058,
+        "endlat": 12.967776,
+        "endlong": 77.5882547,
+        "trafficvolume": 38000
+    },
+    {
+        "road": "Kumaraswamy Layout",
+        "area": "Kumaraswamy",
+        "startlat": 12.9030529,
+        "startlong": 77.5617092,
+        "endlat": 12.9030529,
+        "endlong": 77.5617092,
+        "trafficvolume": 42000
+    },
+    {
+        "road": "Madiwala Road",
+        "area": "Madiwala",
+        "startlat": 12.9279191,
+        "startlong": 77.6226769,
+        "endlat": 12.9255784,
+        "endlong": 77.6270501,
+        "trafficvolume": 47000
+    },
+    {
+        "road": "Old Madras Road",
+        "area": "Old Madras",
+        "startlat": 13.0388465,
+        "startlong": 77.5940092,
+        "endlat": 13.0452174,
+        "endlong": 77.5956289,
+        "trafficvolume": 51000
+    }
+]

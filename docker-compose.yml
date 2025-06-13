@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  # osrm-server service removed
+
+  osrm-data-processor:
+    build:
+      context: ./osrm-data-processor
+      dockerfile: Dockerfile
+    container_name: osrm-data-processor
+    ports:
+      - "5002:5000" # OSRM default port, mapped to 5002 on host to avoid conflict
+    volumes:
+      - ./osrm-data:/osrm-data # Mount the directory containing your processed OSRM data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: src\backend\Dockerfile
+    container_name: backend
+    ports:
+      - "5000:5000" # Map host port 5000 to container port 5000
+    volumes:
+      - ./src/backend:/app # Mount your backend code for development (optional for production)
+    depends_on:
+      - osrm-data-processor # Changed dependency
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./src/frontend/map
+      dockerfile: src\frontend\map\Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"
+    environment:
+      - OSRM_SERVICE_URL=http://osrm-data-processor:5000/route/v1 # How the frontend accesses OSRM
+    depends_on:
+      - backend
+    restart: unless-stopped
