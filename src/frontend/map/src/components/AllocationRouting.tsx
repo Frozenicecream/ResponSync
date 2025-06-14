@@ -17,6 +17,9 @@ declare module 'leaflet' {
   }
 }
 
+// Cache for storing routes
+const routeCache = new Map<string, L.Routing.IRoute>();
+
 interface AllocationRoutingProps {
   routePair: ApiRoutePair | null;
   onRouteFound: (details: RouteDetails) => void;
@@ -73,6 +76,81 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
       L.latLng(routePair.incident.lat, routePair.incident.lng),
     ];
 
+    // Create cache key from waypoints
+    const cacheKey = `${waypoints[0].lat},${waypoints[0].lng};${waypoints[1].lat},${waypoints[1].lng}`;
+
+    const handleRouteFound = (route: L.Routing.IRoute) => {
+      if (routeFoundRef.current) return;
+      routeFoundRef.current = true;
+
+      // Cache the route
+      routeCache.set(cacheKey, route);
+
+      onRouteFound({
+        coordinates: route.coordinates ? route.coordinates.map(c => [c.lat, c.lng] as L.LatLngTuple) : [],
+        totalTimeSeconds: route.summary?.totalTime || 0,
+        totalDistanceMeters: route.summary?.totalDistance || 0,
+      });
+
+      let currentEtaMsg = null;
+      if (showEta && route.summary) {
+        const minutes = Math.round(route.summary.totalTime / 60);
+        currentEtaMsg = `ETA: ${minutes} min (Inc: ${routePair.incident.incident_id}, Res: ${routePair.resource.resource_id})`;
+      } else if (showEta && routePair.predicted_eta_seconds) {
+        const minutes = Math.round(routePair.predicted_eta_seconds / 60);
+        currentEtaMsg = `Predicted ETA: ${minutes} min (Inc: ${routePair.incident.incident_id}, Res: ${routePair.resource.resource_id})`;
+      }
+      setEtaMessage(currentEtaMsg);
+      onEtaUpdate(routePair.allocation_id, currentEtaMsg);
+
+      // Animate ambulance
+      const routeCoordinates = route.coordinates;
+      if (routeCoordinates && routeCoordinates.length > 0) {
+        if (ambulanceMarkerRef.current) {
+          map.removeLayer(ambulanceMarkerRef.current);
+        }
+        ambulanceMarkerRef.current = L.marker(routeCoordinates[0], { icon: ambulanceIcon }).addTo(map);
+
+        if (routePair.resource.type && routePair.resource.status) {
+          ambulanceMarkerRef.current.bindTooltip(`
+            <strong>Resource ID: ${routePair.resource.resource_id || 'N/A'}</strong><br />
+            Type: ${routePair.resource.type}<br />
+            Status: ${routePair.resource.status}
+          `).openTooltip();
+        }
+        
+        let i = 0;
+        const moveAmbulance = () => {
+          if (isRouteCompleted) return;
+          
+          if (i < routeCoordinates.length) {
+            ambulanceMarkerRef.current?.setLatLng(routeCoordinates[i]);
+            i++;
+            setTimeout(moveAmbulance, 100);
+          } else {
+            if (!isRouteCompleted) {
+              onAmbulanceArrived();
+              setIsRouteCompleted(true);
+              setTimeout(() => {
+                if (ambulanceMarkerRef.current && map.hasLayer(ambulanceMarkerRef.current)) {
+                  map.removeLayer(ambulanceMarkerRef.current);
+                  ambulanceMarkerRef.current = null;
+                }
+              }, 3000);
+            }
+          }
+        };
+        moveAmbulance();
+      }
+    };
+
+    // Check if route is in cache
+    const cachedRoute = routeCache.get(cacheKey);
+    if (cachedRoute) {
+      handleRouteFound(cachedRoute);
+      return;
+    }
+
     const control = L.Routing.control({
       waypoints,
       router: L.Routing.osrmv1({
@@ -93,73 +171,9 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
     control._allocationId = routePair.allocation_id;
 
     control.on('routesfound', (e: any) => {
-      // Only process route if it hasn't been found yet for this routePair
-      if (routeFoundRef.current) return;
-      routeFoundRef.current = true;
-
       const routes = e.routes as L.Routing.IRoute[];
       if (routes.length > 0) {
-        const route = routes[0];
-        onRouteFound({
-          coordinates: route.coordinates ? route.coordinates.map(c => [c.lat, c.lng] as L.LatLngTuple) : [],
-          totalTimeSeconds: route.summary?.totalTime || 0,
-          totalDistanceMeters: route.summary?.totalDistance || 0,
-        });
-
-        let currentEtaMsg = null;
-        if (showEta && route.summary) {
-          const minutes = Math.round(route.summary.totalTime / 60);
-          currentEtaMsg = `ETA: ${minutes} min (Inc: ${routePair.incident.incident_id}, Res: ${routePair.resource.resource_id})`;
-        } else if (showEta && routePair.predicted_eta_seconds) {
-          const minutes = Math.round(routePair.predicted_eta_seconds / 60);
-          currentEtaMsg = `Predicted ETA: ${minutes} min (Inc: ${routePair.incident.incident_id}, Res: ${routePair.resource.resource_id})`;
-        }
-        setEtaMessage(currentEtaMsg);
-        onEtaUpdate(routePair.allocation_id, currentEtaMsg);
-
-        // Animate ambulance
-        const routeCoordinates = route.coordinates;
-        if (routeCoordinates && routeCoordinates.length > 0) {
-          if (ambulanceMarkerRef.current) {
-            map.removeLayer(ambulanceMarkerRef.current);
-          }
-          ambulanceMarkerRef.current = L.marker(routeCoordinates[0], { icon: ambulanceIcon }).addTo(map);
-
-          // Add Tooltip to ambulance marker
-          if (routePair.resource.type && routePair.resource.status) {
-            ambulanceMarkerRef.current.bindTooltip(`
-              <strong>Resource ID: ${routePair.resource.resource_id || 'N/A'}</strong><br />
-              Type: ${routePair.resource.type}<br />
-              Status: ${routePair.resource.status}
-            `).openTooltip();
-          }
-          
-          let i = 0;
-          const moveAmbulance = () => {
-            // Stop if route is already completed
-            if (isRouteCompleted) return;
-            
-            if (i < routeCoordinates.length) {
-              ambulanceMarkerRef.current?.setLatLng(routeCoordinates[i]);
-              i++;
-              setTimeout(moveAmbulance, 100); // Adjust speed as needed
-            } else {
-              // Only call onAmbulanceArrived if it hasn't been called for this route yet
-              if (!isRouteCompleted) {
-                onAmbulanceArrived();
-                setIsRouteCompleted(true); // Mark as completed
-                // Remove ambulance marker after arrival
-                setTimeout(() => {
-                  if (ambulanceMarkerRef.current && map.hasLayer(ambulanceMarkerRef.current)) {
-                    map.removeLayer(ambulanceMarkerRef.current);
-                    ambulanceMarkerRef.current = null;
-                  }
-                }, 3000); // Keep ambulance for 3s after arrival
-              }
-            }
-          };
-          moveAmbulance();
-        }
+        handleRouteFound(routes[0]);
       }
     })
     .on('routingerror', (e: any) => {
