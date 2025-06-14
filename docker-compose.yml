@@ -43,7 +43,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      - OSRM_SERVICE_URL=http://localhost:3000/route/v1 # Updated to use nginx proxy
+      - OSRM_SERVICE_URL=http://osrm-data-processor:5000/route/v1
     depends_on:
       - backend
       - osrm-data-processor
