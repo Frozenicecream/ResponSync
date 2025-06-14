@@ -20,6 +20,44 @@ declare module 'leaflet' {
 // Cache for storing routes
 const routeCache = new Map<string, L.Routing.IRoute>();
 
+// Custom router to control requests
+class CustomRouter extends L.Routing.OSRMv1 {
+  constructor(options: any) {
+    super(options);
+  }
+
+  route(waypoints: L.Routing.Waypoint[], callback: (err: any, routes?: L.Routing.IRoute[]) => void, context?: {}, options?: L.Routing.RoutingOptions) {
+    const start = waypoints[0].latLng;
+    const end = waypoints[waypoints.length - 1].latLng;
+    const cacheKey = `${start.lat},${start.lng};${end.lat},${end.lng}`;
+
+    // Check cache first
+    const cachedRoute = routeCache.get(cacheKey);
+    if (cachedRoute) {
+      console.log('Using cached route for:', cacheKey);
+      if (context) {
+        callback.call(context, null, [cachedRoute]);
+      } else {
+        callback(null, [cachedRoute]);
+      }
+      return;
+    }
+
+    // If not in cache, make the request
+    super.route(waypoints, (err: any, routes?: L.Routing.IRoute[]) => {
+      if (!err && routes && routes.length > 0) {
+        console.log('Caching new route for:', cacheKey);
+        routeCache.set(cacheKey, routes[0]);
+      }
+      if (context) {
+        callback.call(context, err, routes);
+      } else {
+        callback(err, routes);
+      }
+    }, context, options);
+  }
+}
+
 interface AllocationRoutingProps {
   routePair: ApiRoutePair | null;
   onRouteFound: (details: RouteDetails) => void;
@@ -76,15 +114,9 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
       L.latLng(routePair.incident.lat, routePair.incident.lng),
     ];
 
-    // Create cache key from waypoints
-    const cacheKey = `${waypoints[0].lat},${waypoints[0].lng};${waypoints[1].lat},${waypoints[1].lng}`;
-
     const handleRouteFound = (route: L.Routing.IRoute) => {
       if (routeFoundRef.current) return;
       routeFoundRef.current = true;
-
-      // Cache the route
-      routeCache.set(cacheKey, route);
 
       onRouteFound({
         coordinates: route.coordinates ? route.coordinates.map(c => [c.lat, c.lng] as L.LatLngTuple) : [],
@@ -144,17 +176,10 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
       }
     };
 
-    // Check if route is in cache
-    const cachedRoute = routeCache.get(cacheKey);
-    if (cachedRoute) {
-      handleRouteFound(cachedRoute);
-      return;
-    }
-
     const control = L.Routing.control({
       waypoints,
-      router: L.Routing.osrmv1({
-        serviceUrl: '/route/v1'  // Always use relative path, let Nginx handle the routing
+      router: new CustomRouter({
+        serviceUrl: '/route/v1'
       }),
       routeWhileDragging: false,
       addWaypoints: false,
@@ -167,7 +192,6 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
       createMarker: () => null,
     } as any);
 
-    // Store allocation ID on the control instance
     control._allocationId = routePair.allocation_id;
 
     control.on('routesfound', (e: any) => {
@@ -185,6 +209,13 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
     .addTo(map);
 
     routingControlRef.current = control;
+
+    return () => {
+      if (routingControlRef.current) {
+        map.removeControl(routingControlRef.current);
+        routingControlRef.current = null;
+      }
+    };
   }, [map, routePair?.allocation_id, onRouteFound, onAmbulanceArrived, onEtaUpdate, showEta]);
 
   return null;
