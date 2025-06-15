@@ -19,6 +19,8 @@ declare module 'leaflet' {
 
 // Cache for storing routes
 const routeCache = new Map<string, L.Routing.IRoute>();
+// Track pending requests to prevent duplicates
+const pendingRequests = new Map<string, boolean>();
 
 // Custom router to control requests
 class CustomRouter extends L.Routing.OSRMv1 {
@@ -30,6 +32,12 @@ class CustomRouter extends L.Routing.OSRMv1 {
     const start = waypoints[0].latLng;
     const end = waypoints[waypoints.length - 1].latLng;
     const cacheKey = `${start.lat},${start.lng};${end.lat},${end.lng}`;
+
+    // Check if request is already pending
+    if (pendingRequests.get(cacheKey)) {
+      console.log('Request already pending for:', cacheKey);
+      return;
+    }
 
     // Check cache first
     const cachedRoute = routeCache.get(cacheKey);
@@ -43,12 +51,22 @@ class CustomRouter extends L.Routing.OSRMv1 {
       return;
     }
 
+    // Mark request as pending
+    pendingRequests.set(cacheKey, true);
+
     // If not in cache, make the request
     super.route(waypoints, (err: any, routes?: L.Routing.IRoute[]) => {
+      // Clear pending status
+      pendingRequests.delete(cacheKey);
+
       if (!err && routes && routes.length > 0) {
         console.log('Caching new route for:', cacheKey);
         routeCache.set(cacheKey, routes[0]);
+      } else {
+        console.error('Routing error for:', cacheKey, err);
+        // Don't cache failed routes
       }
+
       if (context) {
         callback.call(context, err, routes);
       } else {
@@ -179,7 +197,9 @@ const AllocationRouting: React.FC<AllocationRoutingProps> = ({
     const control = L.Routing.control({
       waypoints,
       router: new CustomRouter({
-        serviceUrl: '/route/v1'
+        serviceUrl: '/route/v1',
+        timeout: 10000, // Add timeout
+        retries: 2, // Add retries
       }),
       routeWhileDragging: false,
       addWaypoints: false,
