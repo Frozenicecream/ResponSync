@@ -1,4 +1,5 @@
 # ResponSync
+<<<<<<< HEAD
 
 ResponSync is a emergency response optimization system that leverages machine learning and routing algorithms to improve emergency response times and resource allocation.
 
@@ -101,3 +102,6 @@ npm start
 ## License
 
 MIT
+=======
+ Real-time emergency response web app
+>>>>>>> c559d5cbd964217e601327ee6fa27d0d5462dc47
